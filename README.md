@@ -1,3 +1,5 @@
+https://github.com/pbarbiero/basic-electron-react-boilerplate
+
 # Modern and Minimal Electron + React Starter Kit
 _Electron, React, Webpack -- Modern and up-to-date, with a handful of quality of life features included_
 
