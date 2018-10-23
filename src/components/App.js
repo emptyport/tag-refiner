@@ -2,6 +2,7 @@ import '../assets/css/App.css';
 import React, { Component } from 'react';
 const {dialog} = require('electron').remote;
 import FileList from './FileList';
+let { spectralProcessor } = require('../utils/spectralProcessor');
 
 let presets = require('../assets/presets.json');
 console.log("Loaded presets");
@@ -13,38 +14,109 @@ class App extends React.Component {
 
     this.state = {
       fileList: [],
-      reporters: [],
-      controls: [],
       msLevel: 3,
       tolerance: 0.002,
       foldChange: 2,
       outputPath: ''
     };
 
+    this.processFiles = this.processFiles.bind(this);
     this.selectFiles = this.selectFiles.bind(this);
     this.selectOutputFolder = this.selectOutputFolder.bind(this);
     this.selectPreset = this.selectPreset.bind(this);
+    this.formatListForTextarea = this.formatListForTextarea.bind(this);
+    this.changeTolerance = this.changeTolerance.bind(this);
+    this.changeMsLevel = this.changeMsLevel.bind(this);
+    this.changeFoldChange = this.changeFoldChange.bind(this);
+    this.doProcessing = this.doProcessing.bind(this);
+  }
+
+  formatListForTextarea(list) {
+    return list.join('\n');
+  }
+
+  changeTolerance(event) {
+    let tolerance = parseFloat(event.target.value);
+    this.setState(function() {
+      return {
+        tolerance: tolerance
+      };
+    });
+  }
+
+  changeMsLevel(event) {
+    let msLevel = parseInt(event.target.value);
+    this.setState(function() {
+      return {
+        msLevel: msLevel
+      };
+    });
+  }
+
+  changeFoldChange(event) {
+    let foldChange = parseFloat(event.target.value);
+    this.setState(function() {
+      return {
+        foldChange: foldChange
+      };
+    });
+  }
+
+  async doProcessing(index, file, options) {
+    
+    //this.setState({fileList: fileList});
+  }
+
+  async processFiles() {
+    let rawReporters = document.getElementById("reporter-textarea").value.split("\n");
+    let reporters = rawReporters.map(item => parseFloat(item));
+    let rawControls = document.getElementById("control-textarea").value.split("\n");
+    let controls = rawControls.map(item => parseFloat(item));
+
+    let options = {
+      reporters: reporters,
+      controls: controls,
+      tolerance: this.state.tolerance,
+      msLevel: this.state.msLevel,
+      foldChange: this.state.foldChange,
+      outputPath: this.state.outputPath
+    };
+
+    let fileList = this.state.fileList;
+
+    this.state.fileList.map((file, index) => {
+      let specGen = spectralProcessor(file.file, options, index);
+      let result = specGen.next();
+      while(!result.done) {
+        console.log(result.value.progress);
+        fileList[index].progress = result.value.progress;
+        fileList[index].status = result.value.message;
+        this.setState({
+          fileList: fileList
+        })
+        result = specGen.next();
+      }
+
+    });
   }
 
   selectPreset(event) {
     let key = event.target.value;
     console.log(`Preset key selected: ${key}`);
-    this.setState(function() {
-      let reporters, controls;
-      if(key==='none') {
-        reporters = '';
-        controls = '';
-      }
-      else {
-        reporters = presets[key].reporters.join('\n');
-        controls = presets[key].reporters[0];
-      }
 
-      return {
-        reporters: reporters,
-        controls: controls
-      };
-    });
+    let reporters, controls;
+    if(key==='none') {
+      reporters = [];
+      controls = [];
+    }
+    else {
+      reporters = presets[key].reporters;
+      controls = [presets[key].reporters[0]];
+    }
+
+    document.getElementById("reporter-textarea").value = this.formatListForTextarea(reporters);
+    document.getElementById("control-textarea").value = this.formatListForTextarea(controls);
+
   }
 
   selectOutputFolder() {
@@ -84,7 +156,6 @@ class App extends React.Component {
           status: "Pending"
         }
       });
-
       this.setState(function() {
         return{
           fileList: fileList
@@ -139,28 +210,28 @@ class App extends React.Component {
 
           <div id="reporter-div">
             <div>Reporter ions:</div>
-            <textarea rows="15" cols="15" defaultValue={this.state.reporters}></textarea>
+            <textarea id="reporter-textarea" rows="15" cols="15" defaultValue=''></textarea>
           </div>
 
           <div id="control-div">
             <div>Control channels:</div>
-            <textarea rows="5" cols="15" defaultValue={this.state.controls}></textarea>
+            <textarea id="control-textarea" rows="5" cols="15" defaultValue=''></textarea>
           </div>
 
           <div id="simple-params-div">
             <div className="param-item">
               <div>Tolerance (Da):</div>
-              <input id="tolerance" type="text" />
+              <input id="tolerance" type="text" value={this.state.tolerance} onChange={this.changeTolerance}/>
             </div>
 
             <div className="param-item">
               <div>MS Level with reporters</div>
-              <input id="msLevel" type="number" min="2" max="3"/>
+              <input id="msLevel" type="number" min="2" max="3" value={this.state.msLevel} onChange={this.changeMsLevel}/>
             </div>
 
             <div className="param-item">
               <div>Fold change:</div>
-              <input id="foldChange" type="text" />
+              <input id="foldChange" type="text" value={this.state.foldChange} onChange={this.changeFoldChange}/>
             </div>
 
             <div className="param-item">
@@ -171,6 +242,8 @@ class App extends React.Component {
           </div>
 
         </div>
+
+        <button id="start-button" onClick={this.processFiles}>Start</button>
       </div>
     );
   }
