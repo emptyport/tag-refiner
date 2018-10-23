@@ -39,6 +39,8 @@ function createWindow() {
   }
   mainWindow.loadURL( indexPath );
 
+  mainWindow.setMenu(null);
+
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();

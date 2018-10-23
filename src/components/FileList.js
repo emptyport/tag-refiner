@@ -10,8 +10,6 @@ class FileList extends React.Component {
       processingList: []
     };
 
-    
-
   }
 
   render() {
@@ -22,7 +20,7 @@ class FileList extends React.Component {
           <div className="file-name">
             {entry.file}
           </div>
-          <div id={entry.id+"-progress"} className="file-progress">{entry.progress}</div>
+          <div id={entry.id+"-progress"} className="file-progress">{entry.progress}%</div>
           <div id={entry.id+"-status"} className="file-status">
             {entry.status}
           </div>

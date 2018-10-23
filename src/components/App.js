@@ -28,7 +28,7 @@ class App extends React.Component {
     this.changeTolerance = this.changeTolerance.bind(this);
     this.changeMsLevel = this.changeMsLevel.bind(this);
     this.changeFoldChange = this.changeFoldChange.bind(this);
-    this.doProcessing = this.doProcessing.bind(this);
+    this.handleResult = this.handleResult.bind(this);
   }
 
   formatListForTextarea(list) {
@@ -62,12 +62,22 @@ class App extends React.Component {
     });
   }
 
-  async doProcessing(index, file, options) {
-    
-    //this.setState({fileList: fileList});
+  handleResult(result, specGen, index) {
+    if(result.done) { return; }
+
+    let fileList = this.state.fileList;
+    console.log(result.value.progress);
+    fileList[index].progress = result.value.progress;
+    fileList[index].status = result.value.message;
+    this.setState({
+      fileList: fileList
+    });
+    FileList.forceUpdate();
+    setTimeout(this.handleResult(specGen.next(), specGen, index), 10);
   }
 
-  async processFiles() {
+
+  processFiles() {
     let rawReporters = document.getElementById("reporter-textarea").value.split("\n");
     let reporters = rawReporters.map(item => parseFloat(item));
     let rawControls = document.getElementById("control-textarea").value.split("\n");
@@ -83,21 +93,40 @@ class App extends React.Component {
     };
 
     let fileList = this.state.fileList;
-
-    this.state.fileList.map((file, index) => {
+    for(let i=0; i<fileList.length; i++) {
+    //this.state.fileList.map((file, index) => {
+      let file = fileList[i];
+      let index = i;
       let specGen = spectralProcessor(file.file, options, index);
       let result = specGen.next();
+
+      /*
+      this.handleResult(result, specGen, index);
+      let fileList = this.state.fileList;
+      fileList[index].progress = 100;
+      fileList[index].status = "Done!";
+      this.setState({
+        fileList: fileList
+      });
+      
+      */
+
+      
       while(!result.done) {
         console.log(result.value.progress);
         fileList[index].progress = result.value.progress;
         fileList[index].status = result.value.message;
         this.setState({
           fileList: fileList
-        })
+        });
+        FileList.forceUpdate();
         result = specGen.next();
       }
+      fileList[index].progress = 100;
+      fileList[index].status = "Done!";
+      
 
-    });
+    }
   }
 
   selectPreset(event) {
@@ -199,23 +228,24 @@ class App extends React.Component {
 
         </div>
 
-        <div id="param-selection">
+        <div id="param-selection" className="">
+          <div id="mass-params-div">
+            <div id="preset-div">
+              Select a preset: <br />
+              <select id="presets" onChange={this.selectPreset}>
+                {presetList}
+              </select>
+            </div>
 
-          <div id="preset-div">
-            Select a preset:
-            <select id="presets" onChange={this.selectPreset}>
-              {presetList}
-            </select>
-          </div>
+            <div id="reporter-div">
+              <div>Reporter ions:</div>
+              <textarea id="reporter-textarea" rows="15" cols="15" defaultValue=''></textarea>
+            </div>
 
-          <div id="reporter-div">
-            <div>Reporter ions:</div>
-            <textarea id="reporter-textarea" rows="15" cols="15" defaultValue=''></textarea>
-          </div>
-
-          <div id="control-div">
-            <div>Control channels:</div>
-            <textarea id="control-textarea" rows="5" cols="15" defaultValue=''></textarea>
+            <div id="control-div">
+              <div>Control channels:</div>
+              <textarea id="control-textarea" rows="5" cols="15" defaultValue=''></textarea>
+            </div>
           </div>
 
           <div id="simple-params-div">
