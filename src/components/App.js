@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 const {dialog} = require('electron').remote;
 import FileList from './FileList';
 let { spectralProcessor } = require('../utils/spectralProcessor');
+const WebSocket = require('ws');
+const {spawn} = require('child_process');
 
 let presets = require('../assets/presets.json');
 console.log("Loaded presets");
@@ -92,41 +94,39 @@ class App extends React.Component {
       outputPath: this.state.outputPath
     };
 
-    let fileList = this.state.fileList;
-    for(let i=0; i<fileList.length; i++) {
-    //this.state.fileList.map((file, index) => {
-      let file = fileList[i];
-      let index = i;
-      let specGen = spectralProcessor(file.file, options, index);
-      let result = specGen.next();
+    let args = {
+      options: options,
+      fileList: this.state.fileList
+    }
 
-      /*
-      this.handleResult(result, specGen, index);
-      let fileList = this.state.fileList;
-      fileList[index].progress = 100;
-      fileList[index].status = "Done!";
-      this.setState({
+    let stringArgs = JSON.stringify(args);
+    stringArgs = stringArgs.replace(new RegExp(/\"/, 'g'), "\\\"");
+
+    console.log(stringArgs);
+
+    let child = spawn("node", ["../utils/specWorker.js", stringArgs]);
+    console.log(child);
+
+    child.on('exit', function (code, signal) {
+      console.log('child process exited with ' +
+                  `code ${code} and signal ${signal}`);
+    });
+
+    const socket = new WebSocket("ws://localhost:3000");
+    let fileList = this.state.fileList;
+    let that = this;
+
+    socket.onmessage = function(event) {
+      let data = JSON.parse(event.data);
+      fileList[data.index].progress = data.progress;
+      fileList[data.index].status = data.status;
+      that.setState({
         fileList: fileList
       });
-      
-      */
-
-      
-      while(!result.done) {
-        console.log(result.value.progress);
-        fileList[index].progress = result.value.progress;
-        fileList[index].status = result.value.message;
-        this.setState({
-          fileList: fileList
-        });
-        FileList.forceUpdate();
-        result = specGen.next();
-      }
-      fileList[index].progress = 100;
-      fileList[index].status = "Done!";
-      
-
     }
+
+    
+
   }
 
   selectPreset(event) {
@@ -222,7 +222,7 @@ class App extends React.Component {
         <div id="file-selection">
 
           <div className="container">
-            <FileList files={this.state.fileList} />
+            <FileList ref={instance => { this.child = instance; }} files={this.state.fileList} />
           </div>
           <button onClick={this.selectFiles}>Select files</button>
 

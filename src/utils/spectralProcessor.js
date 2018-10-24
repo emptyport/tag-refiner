@@ -262,7 +262,7 @@ function* spectralProcessor(filename, options, fileIndex) {
     //count_stuff
     //if(count>100) { break; }
     let progress = Math.floor(100*result.value.progress);
-    if(progress - oldProgress > 4) {
+    if(progress - oldProgress > 9) {
       yield({index: fileIndex, progress: progress, message: 'Processing'});
       oldProgress = progress;
     }

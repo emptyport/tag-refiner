@@ -1,26 +1,40 @@
-export default () => {
-  self.addEventListener('message', e => {
-      if (!e) return;
-      let { file, options, index, spectralProcessor } = e.data;
-      spectralProcessor = JSON.parse(spectralProcessor);
-      console.log('processing '+file.file);
+let { spectralProcessor } = require('../utils/spectralProcessor');
+const WebSocket = require('ws');
+let args = process.argv[2];
 
-      let specGen = spectralProcessor(file.file, options, index);
-      let result = specGen.next();
-      while(!result.done) {
-        console.log(result.value.progress);
-        postMessage({
-          index: index,
-          progress: progress,
-          status: 'Processing'
-        });
-        result = specGen.next();
-      }
-      
-      postMessage({
-        index: index,
-        progress: 100,
-        status: 'Done!'
-      });
-  })
-}
+console.log("\n");
+console.log(args);
+console.log("\n");
+
+args = JSON.parse(args);
+
+const wss = new WebSocket.Server( { port: 3000 } );
+
+wss.on('connection', function connection(ws) {
+  args.fileList.map(file => {
+    let filename = file.file;
+    let index = file.id;
+    let options = args.options;
+    let specGen = spectralProcessor(filename, options, index);
+  
+    let result = specGen.next();
+    let progress = 0;
+    let status = "Processing"
+    let message = {progress: progress, status: status, index: index };
+    ws.send(JSON.stringify(message));
+    while(!result.done) {
+      message.progress = result.value.progress;
+      message.status = result.value.message;
+      ws.send(JSON.stringify(message));
+      result = specGen.next();
+    }
+    message.progress = 100;
+    message.status = "Done!";
+    ws.send(JSON.stringify(message));
+  
+  });
+  process.exit(0);
+});
+
+
+
