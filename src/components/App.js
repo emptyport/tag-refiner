@@ -100,7 +100,6 @@ class App extends React.Component {
     }
 
     let stringArgs = JSON.stringify(args);
-    //stringArgs = stringArgs.replace(new RegExp(/\"/, 'g'), "\\\"");
 
     console.log(stringArgs);
 

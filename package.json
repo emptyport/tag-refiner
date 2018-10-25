@@ -1,8 +1,8 @@
 {
-  "name": "basic-electron-react-boilerplate",
-  "version": "0.7.0",
-  "description": "Minimal and modern react+electron+webpack boilerplate",
-  "author": "Phillip Barbiero",
+  "name": "tag-refiner",
+  "version": "1.0.0",
+  "description": "A utility for filtering mass tag data to just the signficantly differing spectra.",
+  "author": "Michael Porter",
   "homepage": "https://github.com/pbarbiero/basic-electron-react-boilerplate",
   "repository": {
     "type": "git",
@@ -41,5 +41,9 @@
     "read-chunk": "^3.0.0",
     "ws": "^6.1.0",
     "xml-js": "^1.6.8"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.0",
+    "utf-8-validate": "^5.0.1"
   }
 }

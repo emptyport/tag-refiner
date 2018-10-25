@@ -186,16 +186,6 @@ function writeSignificantSpectra(wstream, significantSpectra, options) {
       }
     }
 
-    /*
-    let precursorMass = 0;
-    for(let j=0; j<currentSpectrum.cvParam.length; j++) {
-      let name = currentSpectrum.cvParam[j]._attributes.name;
-      if(name==='base peak m/z') {
-        precursorMass = currentSpectrum.cvParam[j]._attributes.value;
-      }
-    }
-    */
-
     let charge = 0;
     let precursorMass = 0;
     let precursorIntensity = 0;
@@ -254,15 +244,12 @@ function* spectralProcessor(filename, options, fileIndex) {
   let msTwo = {};
   let msThree = {};
 
-  //count_stuff
-  let count = 0;
   let oldProgress = 0;
   let result = specGen.next();
   while(!result.done) {
-    //count_stuff
-    //if(count>100) { break; }
+    
     let progress = Math.floor(100*result.value.progress);
-    if(progress - oldProgress > 9) {
+    if(progress - oldProgress > 0) {
       yield({index: fileIndex, progress: progress, message: 'Processing'});
       oldProgress = progress;
     }
@@ -284,8 +271,6 @@ function* spectralProcessor(filename, options, fileIndex) {
       default:
         break;
     }
-    //count_stuff
-    count++;
     result = specGen.next();
   }
 

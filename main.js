@@ -43,11 +43,7 @@ function createBackground() {
 
   // Don't show until we are ready and loaded
   backgroundWindow.once('ready-to-show', () => {
-    backgroundWindow.show();
-    // Open the DevTools automatically if developing
-    if ( dev ) {
-      backgroundWindow.webContents.openDevTools();
-    }
+    
   });
 
   // Emitted when the window is closed.
@@ -101,6 +97,8 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+    backgroundWindow = null;
+    app.quit();
   });
 }
 
