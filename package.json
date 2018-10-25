@@ -16,7 +16,7 @@
     "build": "webpack --config webpack.build.config.js",
     "package": "webpack --config webpack.build.config.js",
     "postpackage": "electron-packager ./ --out=./builds --overwrite",
-    "test": "tape test/*.js | tap-spec"
+    "test": "tape test/*.js --coverage | tap-spec"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

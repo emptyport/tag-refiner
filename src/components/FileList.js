@@ -6,15 +6,8 @@ class FileList extends React.Component {
     super(props);
     console.log(props);
     this.state = {
-      messageTrace: '',
-      processingList: []
-    };
-    this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
-  }
 
-  forceUpdateHandler() {
-    console.log('called');
-    this.forceUpdate();
+    };
   }
 
   render() {
@@ -37,7 +30,6 @@ class FileList extends React.Component {
       <div>
         <ul>
           {fileList}
-          {this.state.messageTrace}
         </ul>
       </div>
     );

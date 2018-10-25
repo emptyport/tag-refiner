@@ -31,6 +31,7 @@ class App extends React.Component {
     this.changeMsLevel = this.changeMsLevel.bind(this);
     this.changeFoldChange = this.changeFoldChange.bind(this);
     this.handleResult = this.handleResult.bind(this);
+    this.handleMissingParameter = this.handleMissingParameter.bind(this);
   }
 
   formatListForTextarea(list) {
@@ -78,6 +79,10 @@ class App extends React.Component {
     setTimeout(this.handleResult(specGen.next(), specGen, index), 10);
   }
 
+  handleMissingParameter(message) {
+    dialog.showErrorBox("Missing parameter", message);
+  }
+
 
   processFiles() {
     let rawReporters = document.getElementById("reporter-textarea").value.split("\n");
@@ -93,6 +98,41 @@ class App extends React.Component {
       foldChange: this.state.foldChange,
       outputPath: this.state.outputPath
     };
+
+    if(rawReporters[0] === "") {
+      this.handleMissingParameter("Please input reporter ions");
+      return;
+    }
+
+    if(rawControls[0] === "") {
+      this.handleMissingParameter("Please input at least one control ion");
+      return;
+    }
+
+    if(isNaN(options.tolerance)) {
+      this.handleMissingParameter("Please input a tolerance");
+      return;
+    }
+
+    if(isNaN(options.msLevel)) {
+      this.handleMissingParameter("Please input an MS level");
+      return;
+    }
+
+    if(isNaN(options.foldChange)) {
+      this.handleMissingParameter("Please input a fold change");
+      return;
+    }
+
+    if(options.outputPath === "") {
+      this.handleMissingParameter("Please select an output path");
+      return;
+    }
+
+    if(this.state.fileList.length === 0) {
+      this.handleMissingParameter("Please select at least one input file");
+      return;
+    }
 
     let args = {
       options: options,
@@ -217,7 +257,7 @@ class App extends React.Component {
         <div id="file-selection">
 
           <div className="container">
-            <FileList ref={instance => { this.child = instance; }} files={this.state.fileList} />
+            <FileList files={this.state.fileList} />
           </div>
           <button onClick={this.selectFiles}>Select files</button>
 

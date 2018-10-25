@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/emptyport/tag-refiner.svg?branch=master)](https://travis-ci.org/emptyport/tag-refiner)
+
 https://github.com/pbarbiero/basic-electron-react-boilerplate
 
 # Modern and Minimal Electron + React Starter Kit
