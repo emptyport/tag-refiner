@@ -11,11 +11,14 @@ const OUTPUT_DIR = path.resolve(__dirname, 'dist');
 const defaultInclude = [SRC_DIR];
 
 module.exports = {
-  entry: SRC_DIR + '/index.js',
+  entry: {
+    bundle: SRC_DIR + '/index.js',
+    background: SRC_DIR + '/background.js',
+  },
   output: {
     path: OUTPUT_DIR,
     publicPath: '/',
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -43,7 +46,6 @@ module.exports = {
   },
   target: 'electron-renderer',
   plugins: [
-    new HtmlWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
     })

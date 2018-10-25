@@ -100,21 +100,17 @@ class App extends React.Component {
     }
 
     let stringArgs = JSON.stringify(args);
-    stringArgs = stringArgs.replace(new RegExp(/\"/, 'g'), "\\\"");
+    //stringArgs = stringArgs.replace(new RegExp(/\"/, 'g'), "\\\"");
 
     console.log(stringArgs);
-
-    let child = spawn("node", ["../utils/specWorker.js", stringArgs]);
-    console.log(child);
-
-    child.on('exit', function (code, signal) {
-      console.log('child process exited with ' +
-                  `code ${code} and signal ${signal}`);
-    });
 
     const socket = new WebSocket("ws://localhost:3000");
     let fileList = this.state.fileList;
     let that = this;
+
+    socket.onopen = function() {
+      socket.send(stringArgs);
+    }
 
     socket.onmessage = function(event) {
       let data = JSON.parse(event.data);
