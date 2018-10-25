@@ -59,7 +59,10 @@ function createBackground() {
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024, height: 768, show: false
+    width: 1024,
+    height: 768,
+    show: false,
+    icon: path.join(__dirname, 'src/assets/images/png/logo64x64.png')
   });
 
   // and load the index.html of the app.
@@ -78,6 +81,9 @@ function createWindow() {
       slashes: true
     });
   }
+
+  console.log(path.join(__dirname, 'dist', 'index.html'));
+  console.log(indexPath);
   mainWindow.loadURL( indexPath );
 
   mainWindow.setMenu(null);
