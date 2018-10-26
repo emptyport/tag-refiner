@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileList displays files 1`] = `
+<div>
+  <ul>
+    <li
+      className="file-entry"
+    >
+      <div
+        className="file-name"
+      >
+        dummy/path/file.mzML
+      </div>
+      <svg
+        className="rc-progress-line file-progress"
+        preserveAspectRatio="none"
+        style={Object {}}
+        viewBox="0 0 100 4"
+      >
+        <path
+          className="rc-progress-line-trail"
+          d="M 2,2
+           L 98,2"
+          fillOpacity="0"
+          stroke="#D9D9D9"
+          strokeLinecap="round"
+          strokeWidth={1}
+        />
+        <path
+          className="rc-progress-line-path"
+          d="M 2,2
+           L 98,2"
+          fillOpacity="0"
+          stroke="#2db7f5"
+          strokeLinecap="round"
+          strokeWidth={4}
+          style={
+            Object {
+              "strokeDasharray": "100px, 100px",
+              "strokeDashoffset": "100px",
+              "transition": "stroke-dashoffset 0.3s ease 0s, stroke 0.3s linear",
+            }
+          }
+        />
+      </svg>
+      <div
+        className="file-status"
+      >
+        Pending
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`FileList initializes correctly 1`] = `
+<div>
+  <ul />
+</div>
+`;

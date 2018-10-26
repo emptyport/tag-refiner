@@ -4,7 +4,7 @@ import { Line } from 'rc-progress';
 class FileList extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    //console.log(props);
     this.state = {
 
     };
