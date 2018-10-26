@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/emptyport/tag-refiner.svg?branch=master)](https://travis-ci.org/emptyport/tag-refiner)
+[![codecov](https://codecov.io/gh/emptyport/tag-refiner/branch/master/graph/badge.svg)](https://codecov.io/gh/emptyport/tag-refiner)
+
 
 https://github.com/pbarbiero/basic-electron-react-boilerplate
 
