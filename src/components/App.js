@@ -7,8 +7,8 @@ const WebSocket = require('ws');
 const {spawn} = require('child_process');
 
 let presets = require('../assets/presets.json');
-console.log("Loaded presets");
-console.log(presets);
+//console.log("Loaded presets");
+//console.log(presets);
 
 class App extends React.Component {
   constructor(props) {
@@ -30,7 +30,6 @@ class App extends React.Component {
     this.changeTolerance = this.changeTolerance.bind(this);
     this.changeMsLevel = this.changeMsLevel.bind(this);
     this.changeFoldChange = this.changeFoldChange.bind(this);
-    this.handleResult = this.handleResult.bind(this);
     this.handleMissingParameter = this.handleMissingParameter.bind(this);
   }
 
@@ -63,20 +62,6 @@ class App extends React.Component {
         foldChange: foldChange
       };
     });
-  }
-
-  handleResult(result, specGen, index) {
-    if(result.done) { return; }
-
-    let fileList = this.state.fileList;
-    console.log(result.value.progress);
-    fileList[index].progress = result.value.progress;
-    fileList[index].status = result.value.message;
-    this.setState({
-      fileList: fileList
-    });
-    FileList.forceUpdate();
-    setTimeout(this.handleResult(specGen.next(), specGen, index), 10);
   }
 
   handleMissingParameter(message) {
@@ -141,7 +126,7 @@ class App extends React.Component {
 
     let stringArgs = JSON.stringify(args);
 
-    console.log(stringArgs);
+    //console.log(stringArgs);
 
     const socket = new WebSocket("ws://localhost:3000");
     let fileList = this.state.fileList;
@@ -166,7 +151,7 @@ class App extends React.Component {
 
   selectPreset(event) {
     let key = event.target.value;
-    console.log(`Preset key selected: ${key}`);
+    //console.log(`Preset key selected: ${key}`);
 
     let reporters, controls;
     if(key==='none') {
@@ -190,7 +175,7 @@ class App extends React.Component {
       ]
     },
     function(folder) {
-      console.log(`Output path set to ${folder}`);
+      //console.log(`Output path set to ${folder}`);
       this.setState(function() {
         return {
           outputPath: folder
@@ -210,8 +195,8 @@ class App extends React.Component {
       ]
     }, 
     function(filenames) {
-      console.log("Selected files:");
-      console.log(filenames);
+      //console.log("Selected files:");
+      //console.log(filenames);
       let fileList = filenames.map((file, index) => {
         return {
           id: index,
