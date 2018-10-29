@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App initializes correctly 1`] = `
+<div>
+  <div
+    id="file-selection"
+  >
+    <div
+      className="container"
+    >
+      <div>
+        <ul />
+      </div>
+    </div>
+    <button
+      onClick={[Function]}
+    >
+      Select files
+    </button>
+  </div>
+  <div
+    className=""
+    id="param-selection"
+  >
+    <div
+      id="mass-params-div"
+    >
+      <div
+        id="preset-div"
+      >
+        Select a preset: 
+        <br />
+        <select
+          id="presets"
+          onChange={[Function]}
+        >
+          <option
+            value="none"
+          >
+            ---
+          </option>
+          <option
+            value="tmt6plex_hcd"
+          >
+            TMT 6-plex HCD
+          </option>
+          <option
+            value="tmt6plex_etd"
+          >
+            TMT 6-plex ETD
+          </option>
+          <option
+            value="tmt11plex_hcd"
+          >
+            TMT 11-plex HCD
+          </option>
+          <option
+            value="tmt11plex_etd"
+          >
+            TMT 11-plex ETD
+          </option>
+        </select>
+      </div>
+      <div
+        id="reporter-div"
+      >
+        <div>
+          Reporter ions:
+        </div>
+        <textarea
+          cols="15"
+          defaultValue=""
+          id="reporter-textarea"
+          rows="15"
+        />
+      </div>
+      <div
+        id="control-div"
+      >
+        <div>
+          Control channels:
+        </div>
+        <textarea
+          cols="15"
+          defaultValue=""
+          id="control-textarea"
+          rows="5"
+        />
+      </div>
+    </div>
+    <div
+      id="simple-params-div"
+    >
+      <div
+        className="param-item"
+      >
+        <div>
+          Tolerance (Da):
+        </div>
+        <input
+          id="tolerance"
+          onChange={[Function]}
+          type="text"
+          value={0.002}
+        />
+      </div>
+      <div
+        className="param-item"
+      >
+        <div>
+          MS Level with reporters
+        </div>
+        <input
+          id="msLevel"
+          max="3"
+          min="2"
+          onChange={[Function]}
+          type="number"
+          value={3}
+        />
+      </div>
+      <div
+        className="param-item"
+      >
+        <div>
+          Fold change:
+        </div>
+        <input
+          id="foldChange"
+          onChange={[Function]}
+          type="text"
+          value={2}
+        />
+      </div>
+      <div
+        className="param-item"
+      >
+        <div>
+          Output folder:
+        </div>
+        <div>
+          
+        </div>
+        <button
+          onClick={[Function]}
+        >
+          Output path
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    id="start-button"
+    onClick={[Function]}
+  >
+    Start
+  </button>
+</div>
+`;
