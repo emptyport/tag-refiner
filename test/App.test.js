@@ -60,7 +60,27 @@ test('App functions', () => {
   instance.changeFoldChange(event);
   expect(instance.state.foldChange).toBe(5);
 
+  // open dialog and setting folder and filenames
   instance.selectOutputFolder();
   expect(remote.dialog.showOpenDialog).toHaveBeenCalled();
-  expect(doSomethingWithPath).toHaveBeenCalledWith('/some/output/path');
+  instance.selectFiles();
+  expect(remote.dialog.showOpenDialog).toHaveBeenCalled();
+  instance.setOutputFolder('/some/output/path');
+  expect(instance.state.outputPath).toBe('/some/output/path');
+  instance.setFileNames(['file1', 'file2']);
+  expect(instance.state.fileList).toEqual([
+    {
+      id: 0,
+      file: 'file1',
+      progress: 0,
+      status: 'Pending'
+    },
+    {
+      id: 1,
+      file: 'file2',
+      progress: 0,
+      status: 'Pending'
+    }
+  ]);
+
 });

@@ -31,6 +31,8 @@ class App extends React.Component {
     this.changeMsLevel = this.changeMsLevel.bind(this);
     this.changeFoldChange = this.changeFoldChange.bind(this);
     this.handleMissingParameter = this.handleMissingParameter.bind(this);
+    this.setOutputFolder = this.setOutputFolder.bind(this);
+    this.setFileNames = this.setFileNames.bind(this);
   }
 
   formatListForTextarea(list) {
@@ -168,20 +170,37 @@ class App extends React.Component {
 
   }
 
+  setOutputFolder(folder) {
+    this.setState(function() {
+      return {
+        outputPath: folder
+      };
+    });
+  }
+
+  setFileNames(filenames) {
+    let fileList = filenames.map((file, index) => {
+      return {
+        id: index,
+        file: file,
+        progress: 0,
+        status: "Pending"
+      }
+    });
+    this.setState(function() {
+      return{
+        fileList: fileList
+      }
+    });
+  }
+
   selectOutputFolder() {
     dialog.showOpenDialog({
       properties: [
         'openDirectory'
       ]
     },
-    function(folder) {
-      //console.log(`Output path set to ${folder}`);
-      this.setState(function() {
-        return {
-          outputPath: folder
-        };
-      });
-    }.bind(this));
+    this.setOutputFolder);
   }
 
   selectFiles() {
@@ -194,23 +213,7 @@ class App extends React.Component {
         { name: 'mzML', extensions: ['mzML'] }
       ]
     }, 
-    function(filenames) {
-      //console.log("Selected files:");
-      //console.log(filenames);
-      let fileList = filenames.map((file, index) => {
-        return {
-          id: index,
-          file: file,
-          progress: 0,
-          status: "Pending"
-        }
-      });
-      this.setState(function() {
-        return{
-          fileList: fileList
-        }
-      });
-    }.bind(this));
+    this.setFileNames);
   }
 
   render() {
