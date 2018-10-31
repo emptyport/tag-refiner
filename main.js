@@ -43,7 +43,9 @@ function createBackground() {
 
   // Don't show until we are ready and loaded
   backgroundWindow.once('ready-to-show', () => {
-    
+    backgroundWindow.show();
+    backgroundWindow.webContents.openDevTools();
+
   });
 
   // Emitted when the window is closed.

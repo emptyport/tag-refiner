@@ -126,6 +126,8 @@ class App extends React.Component {
       fileList: this.state.fileList
     }
 
+    //console.log(args);
+
     let stringArgs = JSON.stringify(args);
 
     //console.log(stringArgs);

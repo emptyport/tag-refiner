@@ -59,6 +59,11 @@ exports[`App initializes correctly 1`] = `
           >
             TMT 11-plex ETD
           </option>
+          <option
+            value="itraq4plex_hcd"
+          >
+            iTraq 4-plex HCD
+          </option>
         </select>
       </div>
       <div

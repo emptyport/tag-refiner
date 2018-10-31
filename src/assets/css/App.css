@@ -44,14 +44,14 @@ button {
 }
 
 .file-name {
-  font-size: 0.9em;
+  font-size: 0.7em;
 }
 
 .file-entry {
   margin: 10px;
   padding: 0px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 33% auto auto;
   justify-items: center;
   align-items: center;
   grid-column-gap: 10px;

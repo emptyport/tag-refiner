@@ -18,7 +18,7 @@ class FileList extends React.Component {
           <div className="file-name">
             {entry.file}
           </div>
-          <Line className="file-progress" strokeWidth={4} percent={entry.progress}/>
+          <Line className="file-progress" strokeWidth={2} percent={entry.progress}/>
           <div className="file-status">
             {entry.status}
           </div>

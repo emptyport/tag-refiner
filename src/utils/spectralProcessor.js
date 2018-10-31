@@ -221,14 +221,24 @@ function writeSignificantSpectra(wstream, significantSpectra, options) {
       }
   
       wstream.write('END IONS\n\n');
-
+      let canContinue = wstream.write('');
+      console.log(canContinue);
+      /*while(!canContinue) {
+        console.log(canContinue);
+        sleep(100);
+        canContinue = wstream.write('');
+      }*/
+      console.log("caught up");
       writtenIDs.push(spectrumID);
     }
-    
-
   }
-
   return true;
+}
+
+function sleep(ms){
+  return new Promise(resolve=>{
+    setTimeout(resolve,ms)
+  })
 }
 
 function* spectralProcessor(filename, options, fileIndex) {
