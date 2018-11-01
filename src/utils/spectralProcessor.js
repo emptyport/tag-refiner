@@ -170,8 +170,9 @@ function getSignificantSpectra(msTwo, msThree, options) {
   return significantSpectra;
 }
 
-function writeSignificantSpectra(wstream, significantSpectra, options) {
+function spectraToString(significantSpectra, options) {
   let writtenIDs = [];
+  let stringifiedSpectra = "";
 
   for(let i=0; i<significantSpectra.length; i++) {
     let currentSpectrum = significantSpectra[i];
@@ -205,34 +206,27 @@ function writeSignificantSpectra(wstream, significantSpectra, options) {
     let spectrumID = currentSpectrum._attributes.id;
 
     if(!writtenIDs.includes(spectrumID)) {
-      wstream.write('BEGIN IONS\n');
-      wstream.write('TITLE=');
-      wstream.write(spectrumID+'\n');
-      wstream.write('RTINSECONDS=');
-      wstream.write(retentionTime+'\n');
-      wstream.write('PEPMASS=');
-      wstream.write(precursorMass+' '+precursorIntensity+'\n');
-      wstream.write('CHARGE=');
-      wstream.write(charge+'+\n');
+      stringifiedSpectra += 'BEGIN IONS\n';
+      stringifiedSpectra += 'TITLE=';
+      stringifiedSpectra += spectrumID+'\n';
+      stringifiedSpectra += 'RTINSECONDS=';
+      stringifiedSpectra += retentionTime+'\n';
+      stringifiedSpectra += 'PEPMASS=';
+      stringifiedSpectra += precursorMass+' '+precursorIntensity+'\n';
+      stringifiedSpectra += 'CHARGE=';
+      stringifiedSpectra += charge+'+\n';
   
       let { intensities, mz } = extractSpectrum(currentSpectrum);
       for(let j=0; j<mz.length; j++) {
-        wstream.write(mz[j] + '\t' + intensities[j] + '\n');
+        stringifiedSpectra += mz[j] + '\t' + intensities[j] + '\n';
       }
   
-      wstream.write('END IONS\n\n');
-      let canContinue = wstream.write('');
-      console.log(canContinue);
-      /*while(!canContinue) {
-        console.log(canContinue);
-        sleep(100);
-        canContinue = wstream.write('');
-      }*/
-      console.log("caught up");
+      stringifiedSpectra += 'END IONS\n\n';
+      
       writtenIDs.push(spectrumID);
     }
   }
-  return true;
+  return stringifiedSpectra;
 }
 
 function sleep(ms){
@@ -249,7 +243,9 @@ function* spectralProcessor(filename, options, fileIndex) {
   let basename = plainFilename.substr(0, plainFilename.lastIndexOf('.'));
   let newFilename = options.outputPath + '/' + basename + '_'+options.foldChange + 'foldChange.mgf';
   console.log(`Output file: ${newFilename}`);
-  let wstream = fs.createWriteStream(newFilename);
+
+  let outputString = '';
+  fs.writeFileSync(newFilename, '');
 
   let msTwo = {};
   let msThree = {};
@@ -268,7 +264,14 @@ function* spectralProcessor(filename, options, fileIndex) {
     switch(msLevel) {
       case 1:
         let significantSpectra = getSignificantSpectra(msTwo, msThree, options);
-        let wroteSpectra = writeSignificantSpectra(wstream, significantSpectra, options);
+        let stringifiedSpectra = spectraToString(significantSpectra, options);
+        outputString += stringifiedSpectra;
+        if(outputString.length > 1000*1000*25) {
+          console.log('writing...');
+          fs.appendFileSync(newFilename, outputString);
+          console.log('done writing');
+          outputString = '';
+        }
         msTwo = {};
         msThree = {};
         break;
@@ -284,7 +287,8 @@ function* spectralProcessor(filename, options, fileIndex) {
     result = specGen.next();
   }
 
-  wstream.end();
+  fs.appendFileSync(newFilename, outputString);
+  
   return({index: fileIndex, progress: 100, message: 'Done!'});
 }
 
